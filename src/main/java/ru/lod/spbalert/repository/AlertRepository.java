@@ -1,7 +1,8 @@
 package ru.lod.spbalert.repository;
 
-import org.springframework.stereotype.Component;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import ru.lod.spbalert.dao.AlertDocument;
 
-@Component
-public class AlertRepository {
+public interface AlertRepository extends ElasticsearchRepository<AlertDocument, String> {
+
 }
