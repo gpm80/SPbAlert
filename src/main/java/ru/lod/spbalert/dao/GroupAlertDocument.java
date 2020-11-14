@@ -3,6 +3,7 @@ package ru.lod.spbalert.dao;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -23,7 +24,7 @@ public class GroupAlertDocument {
     @Field(index = false)
     private String geoHash;
 
-    @Field(type = FieldType.Date)
+    @Field(type = FieldType.Date, format = DateFormat.custom, pattern = "dd/MM/yy hh:mm")
     private Date timePoint;
 
     @Field(type = FieldType.Nested, includeInParent = true)

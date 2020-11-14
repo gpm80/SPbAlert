@@ -21,9 +21,11 @@ import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = {"ru.lod.spbalert"})
 @EnableElasticsearchRepositories(basePackages = {"ru.lod.spbalert.repository"})
+@EnableScheduling
 public class SpbAlertApplication extends SpringBootServletInitializer {
 
     private static Logger logger = LoggerFactory.getLogger(SpbAlertApplication.class);

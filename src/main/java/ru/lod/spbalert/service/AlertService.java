@@ -1,5 +1,6 @@
 package ru.lod.spbalert.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -17,17 +18,23 @@ public class AlertService {
 
     @Autowired
     private AlertRepository alertRepository;
+    @Autowired
+    private GroupAlertService alertService;
 
     public AlertDocument save(Map<String, String> params) {
         return save(AlertDocument.of(params));
     }
 
     public AlertDocument save(AlertDocument alertDocument) {
-        return alertRepository.save(alertDocument);
+        final AlertDocument document = alertRepository.save(alertDocument);
+        alertService.process(document);
+        return document;
     }
 
     public List<AlertDocument> save(List<AlertDocument> alertDocuments) {
-        return Lists.newArrayList(alertRepository.saveAll(alertDocuments));
+        final ArrayList<AlertDocument> documents = Lists.newArrayList(alertRepository.saveAll(alertDocuments));
+        documents.forEach(alertService::process);
+        return documents;
     }
 
     public List<SpbAlert> testSave(Integer count) {
@@ -37,5 +44,9 @@ public class AlertService {
         spbAlert.setType("test");
         final AlertDocument saved = alertRepository.save(AlertDocument.of(spbAlert));
         return Collections.singletonList(saved.getSpbAlert());
+    }
+
+    public long count() {
+        return alertRepository.count();
     }
 }

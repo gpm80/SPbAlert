@@ -1,9 +1,11 @@
 package ru.lod.spbalert.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Группа значений данных
@@ -46,6 +48,11 @@ public class GroupInfo {
 
     public int getActual() {
         //TODO сделать прогрессивную актуальность!!!
+        //по времени считать чем меньше время тем выше вес
+        final Date current = new Date(System.currentTimeMillis());
+        final List<SpbAlert> sorted = getAlertList().stream().sorted((o1, o2) ->
+            o1.getDate().after(o2.getDate()) ? 1 : (o1.getDate() == o2.getDate() ? 0 : -1)).collect(Collectors.toList());
+
         return getAlertList().size();
     }
 }
