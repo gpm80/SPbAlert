@@ -43,6 +43,7 @@ public class GroupAlertService {
             final GroupAlertDocument save = groupAlertRepository.save(groupAlert);
             return save != null;
         } catch (Exception e) {
+            logger.debug(e.getMessage(), e);
             return false;
         }
     }
