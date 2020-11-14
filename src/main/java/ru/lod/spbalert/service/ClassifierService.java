@@ -41,11 +41,11 @@ public class ClassifierService {
     }
 
     public String classify(String keyword) {
-        final Optional<TypeAlertDocument> any = typeAlertDocumentRepository.findByKeywordsLike(keyword)
-            .findAny();
-        if (any.isPresent()) {
-            return any.get().getType();
-        }
+//        final Optional<TypeAlertDocument> any = typeAlertDocumentRepository.findByKeywordsLike(keyword)
+//            .findAny();
+//        if (any.isPresent()) {
+//            return any.get().getType();
+//        }
         //TODO по умолчанию пока что пожар )
         return "пожар";
     }

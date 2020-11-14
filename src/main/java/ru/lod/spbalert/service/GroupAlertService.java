@@ -42,6 +42,7 @@ public class GroupAlertService {
             final GroupAlertDocument save = groupAlertRepository.save(groupAlert);
             return save != null;
         } catch (Exception e) {
+            logger.error("" ,e);
             return false;
         }
     }

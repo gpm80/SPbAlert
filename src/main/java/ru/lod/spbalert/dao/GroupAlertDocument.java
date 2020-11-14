@@ -23,7 +23,7 @@ public class GroupAlertDocument {
     @Field(index = false)
     private String geoHash;
 
-    @Field(type = FieldType.Date)
+    @Field()
     private Date timePoint;
 
     @Field(type = FieldType.Nested, includeInParent = true)

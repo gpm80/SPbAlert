@@ -24,7 +24,7 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 
 @SpringBootApplication(scanBasePackages = {"ru.lod.spbalert"})
 @EnableElasticsearchRepositories(basePackages = {"ru.lod.spbalert.repository"})
-public class SpbAlertApplication extends SpringBootServletInitializer {
+public class SpbAlertApplication{ //extends SpringBootServletInitializer {
 
     private static Logger logger = LoggerFactory.getLogger(SpbAlertApplication.class);
     @Value("${elastic.url}")
