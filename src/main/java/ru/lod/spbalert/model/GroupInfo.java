@@ -14,6 +14,7 @@ public class GroupInfo {
 
     private String geoHash;
     private Set<String> types;
+    private String district;
     private List<SpbAlert> alertList;
 
     public String getGeoHash() {
@@ -44,6 +45,14 @@ public class GroupInfo {
 
     public void setAlertList(List<SpbAlert> alertList) {
         this.alertList = alertList;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
     public int getActual() {

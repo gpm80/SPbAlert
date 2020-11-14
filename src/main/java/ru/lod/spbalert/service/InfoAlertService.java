@@ -1,12 +1,13 @@
 package ru.lod.spbalert.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
@@ -16,6 +17,7 @@ import ru.lod.spbalert.common.DtUtil;
 import ru.lod.spbalert.dao.GroupAlertDocument;
 import ru.lod.spbalert.model.GroupInfo;
 import ru.lod.spbalert.model.RequestInfo;
+import ru.lod.spbalert.model.SpbAlert;
 import ru.lod.spbalert.repository.GroupAlertRepository;
 
 /**
@@ -27,11 +29,10 @@ public class InfoAlertService {
     @Autowired
     private GroupAlertRepository groupAlertRepository;
 
-    public Set<GroupInfo> find(RequestInfo requestInfo) {
+    public List<GroupInfo> find(RequestInfo requestInfo) {
         final Date end = requestInfo.getTimePoint();
         final LocalDateTime localDateTime = DtUtil.toDateTime(end);
         final Date start = DtUtil.toDate(localDateTime.minusHours(requestInfo.getRetroHour()));
-//        final Stream<GroupAlertDocument> stream = groupAlertRepository.findByTimePointBetween(start, end);
         final Stream<GroupAlertDocument> stream =
             groupAlertRepository.findBySpbAlert_DateBetween(start.getTime(), end.getTime());
         Map<String, GroupInfo> groupMap = new HashMap<>();
@@ -49,11 +50,22 @@ public class InfoAlertService {
             });
         });
         // Сортировка групп событий по прогрессивным весам
-        Set<GroupInfo> sortGroupInfo = new TreeSet<>(new GroupInfoComparator());
-        sortGroupInfo.addAll(groupMap.values());
-        return sortGroupInfo;
+        final ArrayList<GroupInfo> sorted = new ArrayList<>(groupMap.values());
+        sorted.sort(new GroupInfoComparator());
+        sorted.forEach(groupInfo -> {
+            groupInfo.setDistrict(groupInfo.getAlertList().stream()
+                .map(SpbAlert::getDistrict)
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.toSet()).stream().collect(Collectors.joining(", "))
+            );
+
+        });
+        return sorted;
     }
 
+    /**
+     * Компаратор для сортировки результатов.
+     */
     private class GroupInfoComparator implements Comparator<GroupInfo> {
 
         @Override

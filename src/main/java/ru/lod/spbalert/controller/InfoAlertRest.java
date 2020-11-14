@@ -1,5 +1,6 @@
 package ru.lod.spbalert.controller;
 
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -28,11 +29,10 @@ public class InfoAlertRest {
     private InfoAlertService infoAlertService;
 
     @PostMapping(path = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Set<GroupInfo> getInfo(@RequestBody RequestInfo requestInfo) {
+    public List<GroupInfo> getInfo(@RequestBody RequestInfo requestInfo) {
         logger.info("{}", requestInfo);
-        final Set<GroupInfo> groupInfos = infoAlertService.find(requestInfo);
+        final List<GroupInfo> groupInfos = infoAlertService.find(requestInfo);
         logger.info("size result: {}", groupInfos.size());
         return groupInfos;
     }
-
 }
