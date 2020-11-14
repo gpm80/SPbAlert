@@ -15,7 +15,7 @@ import ru.lod.spbalert.model.SpbAlert;
 /**
  * Входящие сообщения (без обработки)
  */
-@Document(indexName = "alert-common")
+@Document(indexName = DboIndex.ALERT_COMMON)
 public class AlertDocument {
 
     private static final Logger logger = LoggerFactory.getLogger(AlertDocument.class);
