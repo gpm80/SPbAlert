@@ -1,5 +1,7 @@
 package ru.lod.spbalert.dao;
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -21,12 +23,16 @@ public class GroupAlertDocument {
     @Field(index = false)
     private String geoHash;
 
+    @Field(type = FieldType.Date)
+    private Date timePoint;
+
     @Field(type = FieldType.Nested, includeInParent = true)
     private SpbAlert spbAlert;
 
     public static GroupAlertDocument of(SpbAlert spbAlert) {
         final GroupAlertDocument document = new GroupAlertDocument();
         document.setSpbAlert(spbAlert);
+        document.setTimePoint(spbAlert.getDate());
         return document;
     }
 
@@ -52,6 +58,14 @@ public class GroupAlertDocument {
 
     public void setGeoHash(String geoHash) {
         this.geoHash = geoHash;
+    }
+
+    public Date getTimePoint() {
+        return timePoint;
+    }
+
+    public void setTimePoint(Date timePoint) {
+        this.timePoint = timePoint;
     }
 
     public SpbAlert getSpbAlert() {
