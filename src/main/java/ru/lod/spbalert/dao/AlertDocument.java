@@ -1,5 +1,11 @@
 package ru.lod.spbalert.dao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -12,14 +18,16 @@ import ru.lod.spbalert.model.SpbAlert;
 @Document(indexName = "alert-common")
 public class AlertDocument {
 
+    private static final Logger logger = LoggerFactory.getLogger(AlertDocument.class);
+
     @Id
-    private String id;
+    protected String id;
 
     @Field(index = false)
-    private String search;
+    protected String category;
 
     @Field(type = FieldType.Nested, includeInParent = true)
-    private SpbAlert spbAlert;
+    protected SpbAlert spbAlert;
 
     public AlertDocument() {
     }
@@ -31,6 +39,27 @@ public class AlertDocument {
         return alertDocument;
     }
 
+    public static AlertDocument of(Map<String, String> params) {
+        final AlertDocument alertDocument = new AlertDocument();
+        alertDocument.setCategory(params.getOrDefault("category", null));
+        final SpbAlert spbAlert = new SpbAlert();
+        spbAlert.setDistrict(params.getOrDefault("district", null));
+        spbAlert.setLongitude(Double.parseDouble(params.getOrDefault("longitude", "0")));
+        spbAlert.setLatitude(Double.parseDouble(params.getOrDefault("latitude", "0")));
+        spbAlert.setBuildingEac(Double.parseDouble(params.getOrDefault("buildingEac", "0")));
+        spbAlert.setAddressEac(Double.parseDouble(params.getOrDefault("addressEac", "0")));
+        if (params.containsKey("date") ) {
+            final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy hh:mm");
+            try {
+                spbAlert.setDate(formatter.parse(params.get("date")));
+            } catch (ParseException e) {
+                logger.debug(e.getMessage(), e);
+            }
+        }
+        alertDocument.setSpbAlert(spbAlert);
+        return alertDocument;
+    }
+
     public String getId() {
         return id;
     }
@@ -39,12 +68,12 @@ public class AlertDocument {
         this.id = id;
     }
 
-    public String getSearch() {
-        return search;
+    public String getCategory() {
+        return category;
     }
 
-    public void setSearch(String search) {
-        this.search = search;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public SpbAlert getSpbAlert() {
@@ -59,7 +88,7 @@ public class AlertDocument {
     public String toString() {
         return "AlertCommon{" +
             "id='" + id + '\'' +
-            ", search='" + search + '\'' +
+            ", category='" + category + '\'' +
             ", spbAlert=" + spbAlert +
             '}';
     }

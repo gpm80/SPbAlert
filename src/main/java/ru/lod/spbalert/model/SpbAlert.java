@@ -8,8 +8,9 @@ public class SpbAlert extends GpsPoint {
 
     private Date date;
     private String type;
-    //TODO Общие поля сообщения
-
+    private Double addressEac;
+    private Double buildingEac;
+    private String district;
 
     public Date getDate() {
         return date;
@@ -25,5 +26,40 @@ public class SpbAlert extends GpsPoint {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Double getAddressEac() {
+        return addressEac;
+    }
+
+    public void setAddressEac(Double addressEac) {
+        this.addressEac = addressEac;
+    }
+
+    public Double getBuildingEac() {
+        return buildingEac;
+    }
+
+    public void setBuildingEac(Double buildingEac) {
+        this.buildingEac = buildingEac;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    @Override
+    public String toString() {
+        return "SpbAlert{" +
+            "date=" + date +
+            ", type='" + type + '\'' +
+            ", addressEac=" + addressEac +
+            ", buildingEac=" + buildingEac +
+            ", district='" + district + '\'' +
+            '}';
     }
 }
