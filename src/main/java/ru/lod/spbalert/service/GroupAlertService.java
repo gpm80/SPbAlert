@@ -33,7 +33,7 @@ public class GroupAlertService {
      */
     public boolean process(AlertDocument alertDocument) {
         try {
-            final String classify = classifierService.classify(alertDocument.getSearch());
+            final String classify = classifierService.classify(alertDocument.getCategory());
             final GroupAlertDocument groupAlert = new GroupAlertDocument();
             groupAlert.setType(classify);
             final SpbAlert spbAlert = alertDocument.getSpbAlert();

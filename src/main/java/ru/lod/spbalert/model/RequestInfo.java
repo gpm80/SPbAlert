@@ -8,7 +8,7 @@ import java.util.Date;
 public class RequestInfo {
 
     /**
-     * зарброс от 1 до 12
+     * Разброс от 1 до 12
      */
     private int scatter;
     private Date timePoint;

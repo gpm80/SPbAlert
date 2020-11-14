@@ -1,6 +1,7 @@
 package ru.lod.spbalert.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +25,7 @@ public class InfoAlertRest {
     private InfoAlertService infoAlertService;
 
     @PostMapping(path = "/get")
-    public List<GroupInfo> getInfo(@RequestBody RequestInfo requestInfo) {
+    public Set<GroupInfo> getInfo(@RequestBody RequestInfo requestInfo) {
         return infoAlertService.find(requestInfo);
     }
 
