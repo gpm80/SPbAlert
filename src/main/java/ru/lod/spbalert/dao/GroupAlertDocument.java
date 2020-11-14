@@ -7,28 +7,27 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import ru.lod.spbalert.model.SpbAlert;
 
 /**
- * Входящие сообщения (без обработки)
+ * Документ обработанной информации.
  */
-@Document(indexName = DboIndex.ALERT_COMMON)
-public class AlertDocument {
+@Document(indexName = DboIndex.ALERT_GROUP)
+public class GroupAlertDocument {
 
     @Id
     private String id;
 
     @Field(index = false)
-    private String search;
+    private String type;
+
+    @Field(index = false)
+    private String geoHash;
 
     @Field(type = FieldType.Nested, includeInParent = true)
     private SpbAlert spbAlert;
 
-    public AlertDocument() {
-    }
-
-    public static AlertDocument of(SpbAlert spbAlert) {
-        final AlertDocument alertDocument = new AlertDocument();
-        alertDocument.setSpbAlert(spbAlert);
-        //TODO alertCommon.setSearch(...);
-        return alertDocument;
+    public static GroupAlertDocument of(SpbAlert spbAlert) {
+        final GroupAlertDocument document = new GroupAlertDocument();
+        document.setSpbAlert(spbAlert);
+        return document;
     }
 
     public String getId() {
@@ -39,12 +38,20 @@ public class AlertDocument {
         this.id = id;
     }
 
-    public String getSearch() {
-        return search;
+    public String getType() {
+        return type;
     }
 
-    public void setSearch(String search) {
-        this.search = search;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getGeoHash() {
+        return geoHash;
+    }
+
+    public void setGeoHash(String geoHash) {
+        this.geoHash = geoHash;
     }
 
     public SpbAlert getSpbAlert() {
@@ -57,9 +64,10 @@ public class AlertDocument {
 
     @Override
     public String toString() {
-        return "AlertCommon{" +
+        return "GroupAlertDocument{" +
             "id='" + id + '\'' +
-            ", search='" + search + '\'' +
+            ", type='" + type + '\'' +
+            ", geoHash='" + geoHash + '\'' +
             ", spbAlert=" + spbAlert +
             '}';
     }
