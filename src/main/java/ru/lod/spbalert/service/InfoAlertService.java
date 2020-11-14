@@ -31,7 +31,9 @@ public class InfoAlertService {
         final Date end = requestInfo.getTimePoint();
         final LocalDateTime localDateTime = DtUtil.toDateTime(end);
         final Date start = DtUtil.toDate(localDateTime.minusHours(requestInfo.getRetroHour()));
-        final Stream<GroupAlertDocument> stream = groupAlertRepository.findByTimePointBetween(start, end);
+//        final Stream<GroupAlertDocument> stream = groupAlertRepository.findByTimePointBetween(start, end);
+        final Stream<GroupAlertDocument> stream =
+            groupAlertRepository.findBySpbAlert_DateBetween(start.getTime(), end.getTime());
         Map<String, GroupInfo> groupMap = new HashMap<>();
         // группируем
         stream.forEach(doc -> {

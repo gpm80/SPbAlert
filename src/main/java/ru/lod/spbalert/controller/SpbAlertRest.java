@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpEntity;
@@ -31,12 +33,14 @@ import ru.lod.spbalert.support.ExcelParser;
 @RequestMapping("/alert")
 public class SpbAlertRest {
 
+    private static Logger logger = LoggerFactory.getLogger(SpbAlertRest.class);
     @Autowired
     private AlertService alertService;
 
-    @Scheduled(initialDelay = 1000 * 10, fixedDelay=Long.MAX_VALUE)
+    @Scheduled(initialDelay = 1000 * 10, fixedDelay = Long.MAX_VALUE)
     public void postConstruct() throws IOException {
         if (alertService.count() == 0) {
+            logger.info("load data sets...");
             final File file = new File("src/main/resources/dataset.xlsx");
             final RestTemplate restTemplate = new RestTemplate();
             final String url = "http://localhost:8080/alert/upload";
@@ -71,11 +75,11 @@ public class SpbAlertRest {
     }
 
     @GetMapping(path = "/test/{count}")
-    public List<SpbAlert> testSave(@PathVariable("count") Integer count){
+    public List<SpbAlert> testSave(@PathVariable("count") Integer count) {
         return alertService.testSave(count);
     }
 
-    @PostMapping(value="/upload", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Boolean upload(@RequestParam("file") MultipartFile input) throws IOException {
         alertService.save(ExcelParser.parse(input.getInputStream()));
         return true;

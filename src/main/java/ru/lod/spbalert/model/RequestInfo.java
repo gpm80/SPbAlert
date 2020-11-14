@@ -40,4 +40,14 @@ public class RequestInfo {
     public void setRetroHour(int retroHour) {
         this.retroHour = retroHour;
     }
+
+
+    @Override
+    public String toString() {
+        return "RequestInfo{" +
+            "scatter=" + scatter +
+            ", timePoint=" + timePoint +
+            ", retroHour=" + retroHour +
+            '}';
+    }
 }

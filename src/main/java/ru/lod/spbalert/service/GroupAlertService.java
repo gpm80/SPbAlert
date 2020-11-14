@@ -38,6 +38,7 @@ public class GroupAlertService {
             groupAlert.setType(classify);
             final SpbAlert spbAlert = alertDocument.getSpbAlert();
             groupAlert.setSpbAlert(spbAlert);
+            groupAlert.setTimePoint(spbAlert.getDate());
             groupAlert.setGeoHash(Geohash.stringEncode(spbAlert.getLatitude(), spbAlert.getLongitude()));
             final GroupAlertDocument save = groupAlertRepository.save(groupAlert);
             return save != null;

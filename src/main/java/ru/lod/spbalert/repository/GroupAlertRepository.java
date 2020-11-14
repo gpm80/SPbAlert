@@ -10,4 +10,6 @@ public interface GroupAlertRepository extends ElasticsearchRepository<GroupAlert
 
     Stream<GroupAlertDocument> findByTimePointBetween(Date start, Date end);
 
+    Stream<GroupAlertDocument> findBySpbAlert_DateBetween(Long start, Long end);
+
 }
