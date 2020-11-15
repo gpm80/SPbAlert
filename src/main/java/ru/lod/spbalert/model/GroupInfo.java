@@ -74,11 +74,11 @@ public class GroupInfo {
     private Double derivative(List<Double> alerts) {
         // У нового уведомления наивысший рейтинг
         if (alerts.size() == 1) {
-            return 1d;
+            return 2d;
         }
         if (alerts.size() == 2) {
             double v = alerts.get(1) - alerts.get(0);
-            return v / Math.sqrt(1 + v * v);
+            return (v / Math.sqrt(1 + v * v)) + 1;
         }
         if (alerts.size() > 2) {
             //TODO уменьшающие коэффициенты ранних событий при увеличении времени
