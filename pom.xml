@@ -12,6 +12,7 @@
     <artifactId>spb-alert</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>spb-alert</name>
+    <packaging>war</packaging>
     <description>leadersofdigital.ru</description>
 
     <properties>
