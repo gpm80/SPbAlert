@@ -64,7 +64,7 @@ public class InfoAlertService {
             } else if (o2 == null) {
                 return -1;
             }
-            return Integer.compare(o1.getActual(), o2.getActual());
+            return Double.compare(o1.getActual(), o2.getActual());
         }
     }
 }

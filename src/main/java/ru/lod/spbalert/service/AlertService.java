@@ -33,7 +33,7 @@ public class AlertService {
 
     public List<AlertDocument> save(List<AlertDocument> alertDocuments) {
         final ArrayList<AlertDocument> documents = Lists.newArrayList(alertRepository.saveAll(alertDocuments));
-        documents.forEach(alertService::process);
+        alertDocuments.forEach(alertService::process);
         return documents;
     }
 
