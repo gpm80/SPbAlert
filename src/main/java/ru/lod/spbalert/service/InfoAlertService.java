@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.lod.spbalert.common.DtUtil;
@@ -26,8 +28,11 @@ import ru.lod.spbalert.repository.GroupAlertRepository;
 @Service
 public class InfoAlertService {
 
+    private static Logger logger = LoggerFactory.getLogger(InfoAlertService.class);
     @Autowired
     private GroupAlertRepository groupAlertRepository;
+    @Autowired
+    private DecisionMakingService decisionMakingService;
 
     public List<GroupInfo> find(RequestInfo requestInfo) {
         final Date end = requestInfo.getTimePoint();
@@ -49,24 +54,33 @@ public class InfoAlertService {
                 return groupInfo;
             });
         });
-        // Сортировка групп событий по прогрессивным весам
-        final ArrayList<GroupInfo> sorted = new ArrayList<>(groupMap.values());
-        sorted.sort(new GroupInfoComparator());
-        sorted.forEach(groupInfo -> {
+        // Сортировка групп событий по важности
+        final ArrayList<GroupInfo> result = new ArrayList<>(groupMap.values());
+        result.forEach(groupInfo -> {
+            // входящие в группу районы города
             groupInfo.setDistrict(groupInfo.getAlertList().stream()
                 .map(SpbAlert::getDistrict)
                 .filter(StringUtils::isNotBlank)
                 .collect(Collectors.toSet()).stream().collect(Collectors.joining(", "))
             );
-
+            groupInfo.setCountAlert(groupInfo.getAlertList().size());
+            final Double making = decisionMakingService.making(groupInfo.getAlertList());
+            if (making != null) {
+                groupInfo.setActual(making);
+            }
+            // Зачистка исходной аталитики
+            groupInfo.getAlertList().clear();
         });
-        return sorted;
+        // Сортировка
+        result.sort(new GroupInfoComparator());
+        logger.info("after sort {}", result);
+        return result;
     }
 
     /**
      * Компаратор для сортировки результатов.
      */
-    private class GroupInfoComparator implements Comparator<GroupInfo> {
+    private static class GroupInfoComparator implements Comparator<GroupInfo> {
 
         @Override
         public int compare(GroupInfo o1, GroupInfo o2) {
@@ -78,7 +92,11 @@ public class InfoAlertService {
             } else if (o2 == null) {
                 return -1;
             }
-            return Double.compare(o1.getActual(), o2.getActual());
+            int compare = Double.compare(o2.getActual(), o1.getActual());
+            if (compare == 0) {
+                return Integer.compare(o2.getCountAlert(), o1.getCountAlert());
+            }
+            return compare;
         }
     }
 }
